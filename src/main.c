@@ -14,7 +14,10 @@
 /*
 ** Function format:
 ** [type][spaces/tabs][dereference operator (*)][function name][ ( ][arguments][ ) ][\n][{]
-**
+** This function checks first whether the first character on the line is a letter.
+** Afterwards is checks for ';'.
+** If first character is a letter (not a space etc) AND no ';' present in line
+** then that line is a function prototype.
 */
 
 int     check_functions(char *line)
@@ -22,6 +25,8 @@ int     check_functions(char *line)
     int  i;
 
     i = 0;
+    if (line[i] == '{')
+        return (1);
     if (!(isalpha(line[i])))
         return (0);
     while (line[i] != '\0')
@@ -55,12 +60,13 @@ int     comment_file(int fd)
         //printf("check = %d\n", check);
         if (check == 1)
         {
-            printf("%s\n", line);
+            //printf("%s\n", line);
             if (flag == 1)
             {
-                //printf("%s\n", line);
+                printf("%s\n", line);
                 flag = 0;
-                if (line[0] == '{')
+                check = 0;
+                //if (line[0] == '{')
                     printf("line number = %d\n", i - 1);
             }
         }
