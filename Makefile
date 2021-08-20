@@ -1,9 +1,10 @@
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 SRC_DIR = src/
 SRC = main.c \
-	  comment.c
+	  comment.c \
+	  parse_data.c
 
 OBJ_DIR = src/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)

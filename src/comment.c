@@ -37,6 +37,7 @@ int     comment_file(int fd, int fd_commented)
     int     res;
     int     write_res;
     char    *line;
+    char    *function_name;
     int     check;
     int     flag;
 
@@ -56,17 +57,19 @@ int     comment_file(int fd, int fd_commented)
         //printf("check = %d\n", check);
         if (check == 1)
         {
-            printf("%s\n", line);
+            //printf("%s\n", line);
             if (flag == 1)
             {
                 //printf("%s\n", line);
                 flag = 0;
                 check = 0;
-                printf("line number = %d\n", i - 1);
-                //parse_arguments();
+                //printf("line number = %d\n", i - 1);
+                parse_arguments(function_name);
+                free(function_name);
                 //parse_return_value();
                 //place_comment();
             }
+            function_name = ft_strdup(line);
         }
         // Append the line to the newly created commented file
         //append_line();
