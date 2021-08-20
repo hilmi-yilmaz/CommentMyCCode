@@ -3,28 +3,35 @@ CFLAGS = -Wall -Wextra -Werror -g
 
 SRC_DIR = src/
 SRC = main.c \
-	  get_next_line.c \
-	  get_next_line_utils.c
+	  comment.c
 
 OBJ_DIR = src/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
 
-HEADER_FILES = incl/get_next_line.h
+HEADER_FILES = incl/commentmyccode.h
+
+LIBFT = libft.a
+LIBFT_DIR = src/libft
 
 NAME = CommentMyCCode
 
 VPATH = src
 
-all: $(NAME)
+all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT_DIR)/$(LIBFT) -o $(NAME)
 
 %.o: %.c $(HEADER_FILES)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(LIBFT):
+	make -C $(LIBFT_DIR)
 	  	
 clean:
 	rm -f $(OBJ)
+	make -C $(LIBFT_DIR) clean
+	make -C $(LIBFT_DIR) fclean
 
 fclean: clean
 	rm -f $(NAME)

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   get_next_line.c                                    :+:    :+:            */
+/*   get_next_line_bonus.c                              :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/12/02 17:08:31 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/03/10 17:59:41 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/03/20 13:59:45 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
-#include "../incl/get_next_line.h"
+#include "get_next_line_bonus.h"
 
 /*
 ** The get_next_line-function uses the helper function to read a line
@@ -23,10 +23,15 @@
 ** --> *line is set to NULL.
 ** --> size is set to BUFFER_SIZE. This is done because size needs to be
 ** initialized even if we don't read, because we have \n in our remainder.
-** --> Also, if no data is read, buff[0] = '\0'. Also the in the case that
-** there is a \n in remainder
+** --> Also, if no data is read, buff[0] = '\0'. No data is read when there
+** is a \n in rest.
+** --> re[1024]. This is an array of structs. Each element (struct) of the
+** array is keeping track of the remainder of a specific file descriptor.
+** 1024 is chosen because a process on a Linux system has a limit of 1024 file
+** descriptor.
 ** ------------------------------------------------------------------------
-** Then data is read and the other functions are being called to fill *line.
+** Then, the data is read and the other functions are being called to
+** fill *line.
 */
 
 int	get_next_line(int fd, char **line)
@@ -34,24 +39,24 @@ int	get_next_line(int fd, char **line)
 	int					size;
 	int					flag;
 	char				buff[BUFFER_SIZE + 1];
-	static t_remains	re;
+	static t_remains	re[1024];
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || line == NULL)
+	if (fd < 0 || fd >= 1024 || BUFFER_SIZE <= 0 || line == NULL)
 		return (-1);
 	*line = NULL;
 	set_values(buff, &flag, &size);
 	while (flag == 0)
 	{
-		if (ft_strchr(re.rest + re.i, '\n') == 0)
+		if (ft_strchr_mod(re[fd].rest + re[fd].i, '\n') == 0)
 			size = read(fd, buff, BUFFER_SIZE);
 		if (size == -1)
 			return (-1);
 		buff[size] = '\0';
-		*line = create(*line, buff, &re);
+		*line = create(*line, buff, &re[fd]);
 		if (*line == NULL)
 			return (-1);
-		flag = rest_to_line(*line, buff, &re, flag);
-		buff_to_line_and_rest(*line, buff, &re);
+		flag = rest_to_line(*line, buff, &re[fd], flag);
+		buff_to_line_and_rest(*line, buff, &re[fd]);
 		if (size == 0)
 			return (0);
 	}
@@ -69,8 +74,8 @@ char	*create(char *line, char *buff, t_remains *re)
 	int		size;
 	char	*array;
 
-	size = ft_strlen(line, '\0') + ft_strlen(buff, '\n') \
-			 + ft_strlen(re->rest + re->i, '\n');
+	size = ft_strlen_mod(line, '\0') + ft_strlen_mod(buff, '\n') \
+			 + ft_strlen_mod(re->rest + re->i, '\n');
 	array = (char *)malloc(sizeof(char) * size + 1);
 	if (array == NULL)
 		return (NULL);
@@ -120,8 +125,8 @@ int	rest_to_line(char *line, char *buff, t_remains *re, int flag)
 	int	len_line;
 
 	i = 0;
-	flag = ft_strchr(buff, '\n') + ft_strchr(re->rest + re->i, '\n');
-	len_line = ft_strlen(line, '\0');
+	flag = ft_strchr_mod(buff, '\n') + ft_strchr_mod(re->rest + re->i, '\n');
+	len_line = ft_strlen_mod(line, '\0');
 	while (i < BUFFER_SIZE)
 	{
 		if (*(re->rest + re->i + i) == '\n')
@@ -156,7 +161,7 @@ void	buff_to_line_and_rest(char *line, char *buff, t_remains *re)
 
 	i = 0;
 	j = 0;
-	len_line = ft_strlen(line, '\0');
+	len_line = ft_strlen_mod(line, '\0');
 	while (*(buff + i) != '\0' && *(buff + i) != '\n')
 	{
 		*(line + len_line + i) = *(buff + i);

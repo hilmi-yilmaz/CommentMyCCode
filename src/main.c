@@ -2,80 +2,13 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "../incl/get_next_line.h"
+#include "../incl/commentmyccode.h"
 #include <ctype.h>
 
 /*
 ** Config file in home directory .CommentMyCCode/config
 **
 **/
-
-
-/*
-** Function format:
-** [type][spaces/tabs][dereference operator (*)][function name][ ( ][arguments][ ) ][\n][{]
-** This function checks first whether the first character on the line is a letter.
-** Afterwards is checks for ';'.
-** If first character is a letter (not a space etc) AND no ';' present in line
-** then that line is a function prototype.
-*/
-
-int     check_functions(char *line)
-{
-    int  i;
-
-    i = 0;
-    if (line[i] == '{')
-        return (1);
-    if (!(isalpha(line[i])))
-        return (0);
-    while (line[i] != '\0')
-    {
-        if (line[i] == ';')
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
-int     comment_file(int fd)
-{
-    int     i;
-    int     res;
-    char    *line;
-    int     check;
-    int     flag;
-
-    i = 1; // represents the line number in the file
-    res = 1;
-    line = NULL;
-    flag = 0;
-    check = 0;
-    while (res > 0)
-    {
-        res = get_next_line(fd, &line);
-        if (check == 1)
-            flag = 1;
-        check = check_functions(line);
-        //printf("check = %d\n", check);
-        if (check == 1)
-        {
-            //printf("%s\n", line);
-            if (flag == 1)
-            {
-                printf("%s\n", line);
-                flag = 0;
-                check = 0;
-                //if (line[0] == '{')
-                    printf("line number = %d\n", i - 1);
-            }
-        }
-        free(line);
-        line = NULL;
-        i++;
-    }
-    return (0);
-}
 
 int main(int argc, char **argv)
 {
@@ -92,12 +25,17 @@ int main(int argc, char **argv)
 
     if (argc < 2)
     {
-        printf("Error: No argument supplied");
+        printf("Error: No argument supplied\n");
         return (1);
     }
 
     // STEP 2: Open a file specified in the config
     fd = open(argv[1], O_RDONLY);
+
+    // STEP 3: Create a new file to append the comments to.
+    char *new_file_name = ft_strjoin("commented_",  argv[1]);
+    printf("new_file_name = |%s|\n", new_file_name);
+    free(new_file_name);
 
     // STEP 3: Find which lines contain function prototypes
     comment_file(fd);
