@@ -1,6 +1,7 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h> // for write
 #include "../incl/commentmyccode.h"
 
 /*
@@ -30,10 +31,11 @@ int     check_functions(char *line)
     return (1);
 }
 
-int     comment_file(int fd)
+int     comment_file(int fd, int fd_commented)
 {
     int     i;
     int     res;
+    int     write_res;
     char    *line;
     int     check;
     int     flag;
@@ -46,6 +48,8 @@ int     comment_file(int fd)
     while (res > 0)
     {
         res = get_next_line(fd, &line);
+        write_res = write(fd_commented, line, ft_strlen(line));
+        write_res = write(fd_commented, "\n", 1);
         if (check == 1)
             flag = 1;
         check = check_functions(line);
@@ -59,6 +63,8 @@ int     comment_file(int fd)
                 flag = 0;
                 check = 0;
                 printf("line number = %d\n", i - 1);
+                //parse_arguments();
+                //parse_return_value();
                 //place_comment();
             }
         }
