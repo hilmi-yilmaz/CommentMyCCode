@@ -16,67 +16,33 @@
 
 int main(int argc, char **argv)
 {
-    char    *line;
     int     fd;
-    int     result;
+    int     fd_commented;
+    int     term;
 
-    // STEP 1: Parse the config file
-    //  Parse the config file.
-    //  Contains Info on which folder to comment all files.
-    //  Also the comment format can be found there
-    //  Only comment .c files
-    //
-
-    if (argc < 2)
+    if (argc != 2)
     {
-        printf("Error: No argument supplied\n");
+        printf("Error: Wrong amount of arguments supplied. Run the program as follows:\n./CommentMyCCode [file_to_comment.c]\n");
         return (-1);
     }
-
-    // STEP 2: Check whether the config file exists
-    //int acces = access("/home/hilmi/Desktop/codam/curriculum/CommentMyCCode/src/main.c", F_OK);
-    char *home = getenv("HOME");
-    if (home == NULL)
-    {
-        printf("Error: Can't find HOME environment variable\n");
-        return (-1);
-    }
-    printf("HOME=%s\n", home);
-    char *path_to_config = ft_strjoin(home, "/.commentmyccode/config");
-    int access_ret = access(path_to_config, F_OK);
-    printf("access = %d\n", access_ret);
-    if (access_ret != 0)
-    {
-        printf("Error: ~/.commentmyccode/config doesn't exist\n");
-        return (-1);
-    }
-    free(path_to_config);
-
-    // STEP 3: Open a file specified in the config
+    // STEP 1: Open the file to be commented
     fd = open(argv[1], O_RDONLY);
-
-    // STEP 4: Create hidden directory if it doesn't exists yet
-    if (mkdir(".commentmyccode/", 0775) == -1)
-        printf("Error: %s %s\n", ".commentmyccode/ -->", strerror(errno));
-
-    // STEP 5: Create a new file inside the hidden directory to append the comments to.
-    char *new_file_name = ft_strjoin(".commentmyccode/commented_",  argv[1]);
-    printf("new_file_name = |%s|\n", new_file_name);
-    int fd_commented = open(new_file_name, O_RDWR | O_TRUNC | O_CREAT | O_APPEND, 0644);
+    if (fd == -1)
+    {
+        printf("Error: %s (%s)\n", strerror(errno), argv[1]);
+        return (-1);
+    }
+    // STEP 2: Initialize the program, open new file to be commented
+    fd_commented = init(argv[1]);
     if (fd_commented == -1)
-        printf("Opening %s failed: %s\n", new_file_name, strerror(errno));
-    printf("fd_commented = %d\n", fd_commented);
-    free(new_file_name);
+        return (-1);
 
-    // STEP 6: Find which lines contain function prototypes
+    // STEP 3: Find which lines contain function prototypes and comment them
     comment_file(fd, fd_commented);
-    
-    // STEP 7: Append the comment in place
-    result = get_next_line(fd, &line);
-    //printf("line = %s\n", line);
-    //printf("result = %d\n", result);
-    free(line);
-    close(fd);
-    close(fd_commented);
+ 
+    // STEP 4: Terminate the program, close the open file desciptors
+    term = terminate(fd, fd_commented);
+    if (term == -1)
+        return (-1);
     return (0);
 }

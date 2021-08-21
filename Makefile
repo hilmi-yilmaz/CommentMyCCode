@@ -3,8 +3,10 @@ CFLAGS = -Wall -Wextra -Werror -g -fsanitize=address
 
 SRC_DIR = src/
 SRC = main.c \
+	  init.c \
 	  comment.c \
-	  parse_data.c
+	  parse_data.c \
+	  terminate.c
 
 OBJ_DIR = src/
 OBJ = $(SRC:%.c=$(OBJ_DIR)%.o)
