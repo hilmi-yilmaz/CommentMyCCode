@@ -40,6 +40,7 @@ int     comment_file(int fd, int fd_commented)
     char    *function_name;
     int     check;
     int     flag;
+    t_list  *list;
 
     i = 1; // represents the line number in the file
     res = 1;
@@ -64,7 +65,12 @@ int     comment_file(int fd, int fd_commented)
                 flag = 0;
                 check = 0;
                 //printf("line number = %d\n", i - 1);
-                parse_arguments(function_name);
+                list = parse_arguments(function_name);
+                while (list != NULL)
+                {
+                    printf("name = |%s|\n", ((t_arguments *)(list->content))->name);
+                    list = list->next;
+                }
                 free(function_name);
                 //parse_return_value();
                 //place_comment();

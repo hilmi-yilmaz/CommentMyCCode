@@ -64,7 +64,7 @@ int create_hidden_dir(void)
 {
     int mkdir_ret;
 
-    mkdir_ret = mkdir(".commentmyccode/", 0755);
+    mkdir_ret = mkdir(".commentmyccode/", 0755); // no error message, because when return -1, mkdir creates new directory
     return (0);
 }
 

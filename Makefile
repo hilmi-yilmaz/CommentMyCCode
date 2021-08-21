@@ -6,6 +6,7 @@ SRC = main.c \
 	  init.c \
 	  comment.c \
 	  parse_data.c \
+	  utils.c \
 	  terminate.c
 
 OBJ_DIR = src/
