@@ -40,12 +40,15 @@ int     comment_file(int fd, int fd_commented)
     char    *function_name;
     int     check;
     int     flag;
+    int     flag_function_name;
     t_list  *list;
 
     i = 1; // represents the line number in the file
     res = 1;
     line = NULL;
+    function_name = NULL;
     flag = 0;
+    flag_function_name = 0;
     check = 0;
     while (res > 0)
     {
@@ -69,12 +72,14 @@ int     comment_file(int fd, int fd_commented)
                 list = parse_arguments(function_name);
                 print_llist(list);
                 free(function_name);
+                function_name = NULL;
                 //parse_return_value();
                 //place_comment();
                 free_llist(list);
             }
-            function_name = ft_strdup(line);
         }
+        free(function_name);
+        function_name = ft_strdup(line);
         // Append the line to the newly created commented file
         //append_line();
 
@@ -82,5 +87,6 @@ int     comment_file(int fd, int fd_commented)
         line = NULL;
         i++;
     }
+    free(function_name);
     return (0);
 }
