@@ -65,15 +65,13 @@ int     comment_file(int fd, int fd_commented)
                 flag = 0;
                 check = 0;
                 //printf("line number = %d\n", i - 1);
+                printf("\n%s\n", function_name);
                 list = parse_arguments(function_name);
-                while (list != NULL)
-                {
-                    printf("name = |%s|\n", ((t_arguments *)(list->content))->name);
-                    list = list->next;
-                }
+                print_llist(list);
                 free(function_name);
                 //parse_return_value();
                 //place_comment();
+                free_llist(list);
             }
             function_name = ft_strdup(line);
         }
