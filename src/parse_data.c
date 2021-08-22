@@ -17,7 +17,6 @@ void    get_argument(t_list *list, char *line, int len, int count)
 
     // Create a substring
     arg = ft_substr(line, 0, len);
-    //printf("arg = |%s|\n", arg);
 
     // Split the data by spaces
     splits = ft_split(arg, ' ');
@@ -33,26 +32,29 @@ void    get_argument(t_list *list, char *line, int len, int count)
 
     args->name = ft_strtrim(splits[total_splits - 1], "*"); // trim allocates new memory, so split can be freed
     
-
-    // ATTENTION: this while loop contains leaks because each time new
-    // memory allocated but not freed
-    i = 1;
-    tmp = ft_strdup(splits[0]);
+    i = 0;
     while (i < total_splits - 1)
     {
-        args->type = ft_strjoin(tmp, splits[i]); //strjoin allocates new memory
+        if (i == 0)
+            tmp = ft_strdup(splits[i]);
+        if (i == total_splits - 2) // if i is equal to last word in type, append nothing
+            args->type = ft_strjoin(tmp, "");
+        else
+            args->type = ft_strjoin(tmp, splits[i + 1]); // else append next
         free(tmp);
         tmp = NULL;
-        tmp = args->type;
+        if (i != total_splits - 2)
+            tmp = args->type;
         i++;
     }
+    //free(tmp);
 
-    int j = 0;
-    while (splits[j] != NULL)
+    i = 0;
+    while (splits[i] != NULL)
     {
         //printf("|%s|\n", splits[j]);
-        free(splits[j]);
-        j++;
+        free(splits[i]);
+        i++;
     }
     free(splits);
 
@@ -61,12 +63,6 @@ void    get_argument(t_list *list, char *line, int len, int count)
         list->content = args;
     else
         ft_lstadd_back(&list, ft_lstnew(args));
-
-    //print_llist(list);
-
-    //t_arguments *tester = list_element->content;
-
-    //printf("((t_arguments *)list_element->content)->name = %s\n", ((t_arguments *)list_element->content)->name);
 
     free(arg);
 }
