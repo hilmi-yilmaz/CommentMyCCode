@@ -56,10 +56,10 @@ int     comment_file(int fd, int fd_commented)
             flag = 1;
         check = check_functions(line);
         //printf("check = %d\n", check);
-        if (check == 1)
+        if (check == 1) //this could be function line
         {
             //printf("%s\n", line);
-            if (flag == 1)
+            if (flag == 1) // to be sure check next line to be '{'
             {
                 //printf("%s\n", line);
                 flag = 0;

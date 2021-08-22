@@ -32,3 +32,16 @@ void    free_llist(t_list *list)
 {
     ft_lstclear(&list, free_arguments);
 }
+
+void    free_string_array(char **str_arr)
+{
+    int i;
+
+    i = 0;
+    while (str_arr[i] != NULL)
+    {
+        free(str_arr[i]);
+        i++;
+    }
+    free(str_arr);
+}
