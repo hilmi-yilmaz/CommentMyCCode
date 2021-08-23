@@ -2,33 +2,32 @@
 #include <stdlib.h>
 #include "../incl/commentmyccode.h"
 
-char    *join_splits(char **splits, char c)
+char    *join_splits(char **splits, char c, int len)
 {
     int     i;
-    int     amount_splits;
+    //int     amount_splits;
     char    *joined;
     char    *tmp_space;
     char    *tmp;
     char    c_str[2];
 
-
     i = 1;
-    amount_splits = len_string_array(splits);
+    //amount_splits = len_string_array(splits);
     c_str[0] = c;
     c_str[1] = '\0';
     tmp = ft_strdup(splits[0]);
-    while (i < amount_splits)
+    while (i < len)
     {
         tmp_space = ft_strjoin(tmp, c_str);
         free(tmp);
         joined = ft_strjoin(tmp_space, splits[i]);
         free(tmp_space);
         tmp = ft_strdup(joined);
-        if (i != amount_splits - 1)
+        if (i != len - 1)
             free(joined);
         i++;
     }
-    if (amount_splits == 1)
+    if (len == 1 || len == 0) //len = 0 is the case that we have (...) variadic, in that case also put that in the type
         joined = ft_strdup(splits[0]);
     free(tmp);
     return (joined);

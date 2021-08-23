@@ -41,6 +41,7 @@ int     comment_file(int fd, int fd_commented);
 void    parse_function_name(char **name, char *line);
 
 void    parse_return(t_return **return_data, char *line);
+void    parse_return_type(t_return **return_data, char *line);
 void    compress_spaces(char **str);
 
 void    parse_arguments(t_list **args_list, char *line);
@@ -55,7 +56,7 @@ int     terminate(int fd, int fd_commented);
 
 /* Utils */
 int         len_string_array(char **str);
-char        *join_splits(char **splits, char c);
+char        *join_splits(char **splits, char c, int len);
 void        print_string_array(char **str);
 void        init_args_struct(t_arguments *args);
 t_return    *init_return_struct(void);

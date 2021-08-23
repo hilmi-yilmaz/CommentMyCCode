@@ -9,33 +9,7 @@ void    get_name(t_arguments *args, char **splits, int total_splits)
 
 void    get_type(t_arguments *args, char **splits, int total_splits)
 {
-    int  i;
-    char *tmp;
-    char *space;
-    char *tmp_space;
-
-    i = 0;
-    space = malloc(sizeof(*space) * 2);
-    ft_strlcpy(space, " ", 2);
-    while (i < total_splits - 1)
-    {
-        if (i == 0)
-            tmp = ft_strdup(splits[i]);
-        if (i == total_splits - 2) // if i is equal to last word in type, append nothing
-            args->type = ft_strjoin(tmp, "");
-        else
-        {
-            tmp_space = ft_strjoin(tmp, space);
-            args->type = ft_strjoin(tmp_space, splits[i + 1]); // else append next
-            free(tmp_space);
-        }
-        free(tmp);
-        tmp = NULL;
-        if (i != total_splits - 2)
-            tmp = args->type;
-        i++;
-    }
-    free(space);
+    args->type = join_splits(splits, ' ', total_splits - 1);
 }
 
 void    get_deref_operators(t_arguments *args, char **splits, int total_splits)

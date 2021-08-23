@@ -19,11 +19,11 @@ void    compress_spaces(char **return_type)
     }
     splits = ft_split(*return_type, ' ');
     free(*return_type);
-    *return_type = join_splits(splits, ' ');
+    *return_type = join_splits(splits, ' ', len_string_array(splits));
     free_string_array(splits);
 }
 
-void    parse_return(t_return **return_data, char *line)
+void    parse_return_type(t_return **return_data, char *line)
 {
     int i;
     int j;
@@ -47,4 +47,10 @@ void    parse_return(t_return **return_data, char *line)
     else
         (*return_data)->type = ft_substr(line, 0, space);
     compress_spaces(&(*return_data)->type);
+}
+
+
+void    parse_return(t_return **return_data, char *line)
+{
+    parse_return_type(return_data, line);
 }
