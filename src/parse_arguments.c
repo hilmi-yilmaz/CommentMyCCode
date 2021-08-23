@@ -45,7 +45,7 @@ void    get_deref_operators(t_arguments *args, char **splits, int total_splits)
 }
 
 
-void    get_argument(t_list *list, char *line, int len, int count)
+void    get_argument(t_list *args_list, char *line, int len, int count)
 {
     char        *arg;
     char        **splits;
@@ -71,25 +71,23 @@ void    get_argument(t_list *list, char *line, int len, int count)
 
     // Put the struct inside the linked list
     if (count == 0)
-        list->content = args;
+        args_list->content = args;
     else
-        ft_lstadd_back(&list, ft_lstnew(args));
+        ft_lstadd_back(&args_list, ft_lstnew(args));
     free_string_array(splits);
     free(arg);
 }
 
-t_list *parse_arguments(char *line)
+void    parse_arguments(t_list **args_list, char *line)
 {
     int         i;
     int         j;
     int         count;
-    t_list      *list;
 
-    //printf("line = %s\n", line);
     i = 0;
     j = 0;
     count = 0;
-    list = ft_lstnew(NULL);
+    *args_list = ft_lstnew(NULL);
     while (*(line + i) != '(')
         i++;
     i++;
@@ -97,7 +95,7 @@ t_list *parse_arguments(char *line)
     {
         if (*(line + i + j) == ',' || *(line + i + j) == ')')
         {
-            get_argument(list, line + i, j, count);
+            get_argument(*args_list, line + i, j, count);
             i += (j + 1);
             j = 0;
             count++;
@@ -105,5 +103,4 @@ t_list *parse_arguments(char *line)
         }
         j++;
     }
-    return (list);
 }

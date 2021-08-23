@@ -9,6 +9,28 @@ void    init_args_struct(t_arguments *args)
     args->deref_operators = 0;
 }
 
+t_return    *init_return_struct(void)
+{
+    t_return    *return_data;
+
+    return_data = malloc(sizeof(*return_data));
+    return_data->name = NULL;
+    return_data->type = NULL;
+    return_data->deref_operators = 0;
+    return (return_data);
+}
+
+t_func_data *init_func_data(void)
+{
+    t_func_data *func_data;
+
+    func_data = malloc(sizeof(*func_data));
+    func_data->name = NULL;
+    func_data->args_list = NULL;
+    func_data->return_data = init_return_struct();
+    return (func_data);
+}
+
 void    print_llist(t_list *list)
 {
     while (list != NULL)
@@ -31,6 +53,21 @@ void    free_arguments(void *args)
 void    free_llist(t_list *list)
 {
     ft_lstclear(&list, free_arguments);
+}
+
+void    free_func_data(t_func_data *func_data)
+{
+    free(func_data->name);
+    free_llist(func_data->args_list);
+    free_return_data(func_data->return_data);
+    free(func_data);
+}
+
+void    free_return_data(t_return *return_data)
+{
+    free(return_data->name);
+    free(return_data->type);
+    free(return_data);
 }
 
 void    free_string_array(char **str_arr)

@@ -5,7 +5,7 @@ SRC_DIR = src/
 SRC = main.c \
 	  init.c \
 	  comment.c \
-	  parse_data.c \
+	  parse_arguments.c \
 	  utils.c \
 	  terminate.c
 

@@ -11,6 +11,22 @@ typedef struct s_arguments
 
 }   t_arguments;
 
+typedef struct s_return
+{
+    char    *name;
+    char    *type;
+    int     deref_operators;
+
+}   t_return;
+
+typedef struct s_func_data
+{
+    char        *name;
+    t_return    *return_data;
+    t_list      *args_list; //linked list for arguments
+
+}   t_func_data;
+
 
 /* Initialize */
 int     init(char *src_file);
@@ -21,7 +37,7 @@ int     create_commented_file(char *src_file);
 
 int     check_functions(char *line);
 int     comment_file(int fd, int fd_commented);
-t_list  *parse_arguments(char *line);
+void    parse_arguments(t_list **args_list, char *line);
 void    get_argument(t_list *args, char *line, int len, int count);
 void    get_name(t_arguments *args, char **splits, int total_splits);
 void    get_type(t_arguments *args, char **splits, int total_splits);
@@ -31,10 +47,14 @@ void    get_deref_operators(t_arguments *args, char **splits, int total_splits);
 int     terminate(int fd, int fd_commented);
 
 /* Utils */
-void    init_args_struct(t_arguments *args);
-void    print_llist(t_list *list);
-void    free_arguments(void *args);
-void    free_llist(t_list *list);
-void    free_string_array(char **str_arr);
+void        init_args_struct(t_arguments *args);
+t_return    *init_return_struct(void);
+t_func_data *init_func_data(void);
+void        print_llist(t_list *list);
+void        free_arguments(void *args);
+void        free_llist(t_list *list);
+void        free_string_array(char **str_arr);
+void        free_func_data(t_func_data *func_data);
+void        free_return_data(t_return *return_data);
 
 #endif

@@ -33,22 +33,22 @@ int     check_functions(char *line)
 
 int     comment_file(int fd, int fd_commented)
 {
-    int     i;
-    int     res;
-    int     write_res;
-    char    *line;
-    char    *function_name;
-    int     check;
-    int     flag;
-    int     flag_function_name;
-    t_list  *list;
+    int         i;
+    int         res;
+    int         write_res;
+    char        *line;
+    char        *function_name;
+    int         check;
+    int         flag;
+    t_func_data *func_data;
+
+
 
     i = 1; // represents the line number in the file
     res = 1;
     line = NULL;
     function_name = NULL;
     flag = 0;
-    flag_function_name = 0;
     check = 0;
     while (res > 0)
     {
@@ -61,21 +61,23 @@ int     comment_file(int fd, int fd_commented)
         //printf("check = %d\n", check);
         if (check == 1) //this could be function line
         {
-            //printf("%s\n", line);
+            // Each time in flag we found another function
             if (flag == 1) // to be sure check next line to be '{'
             {
                 //printf("%s\n", line);
+                //INIT FUNC DATA
+                func_data = init_func_data();
                 flag = 0;
                 check = 0;
                 //printf("line number = %d\n", i - 1);
                 printf("\n%s\n", function_name);
-                list = parse_arguments(function_name);
-                print_llist(list);
+                parse_arguments(&func_data->args_list, function_name);
+                print_llist(func_data->args_list);
                 free(function_name);
                 function_name = NULL;
                 //parse_return_value();
                 //place_comment();
-                free_llist(list);
+                free_func_data(func_data);
             }
         }
         free(function_name);
