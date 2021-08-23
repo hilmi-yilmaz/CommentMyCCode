@@ -37,7 +37,7 @@ int     comment_file(int fd, int fd_commented)
     int         res;
     int         write_res;
     char        *line;
-    char        *function_name;
+    char        *function_line;
     int         check;
     int         flag;
     t_func_data *func_data;
@@ -47,7 +47,7 @@ int     comment_file(int fd, int fd_commented)
     i = 1; // represents the line number in the file
     res = 1;
     line = NULL;
-    function_name = NULL;
+    function_line = NULL;
     flag = 0;
     check = 0;
     while (res > 0)
@@ -70,20 +70,21 @@ int     comment_file(int fd, int fd_commented)
                 flag = 0;
                 check = 0;
                 //printf("line number = %d\n", i - 1);
-                printf("\n%s\n", function_name);
-                parse_arguments(&func_data->args_list, function_name);
-                print_llist(func_data->args_list);
-                parse_function_name(&func_data->name, function_name);
+                printf("\n%s\n", function_line);
+                parse_arguments(&func_data->args_list, function_line);
+                parse_function_name(&func_data->name, function_line);
                 printf("function_name = |%s|\n", func_data->name);
-                //parse_return_value();
+                print_llist(func_data->args_list);
+                parse_return(func_data->return_data, function_line);
+                printf("return_data type = |%s|\n", func_data->return_data->type);
                 //place_comment();
-                free(function_name);
-                function_name = NULL;
+                free(function_line);
+                function_line = NULL;
                 free_func_data(func_data);
             }
         }
-        free(function_name);
-        function_name = ft_strdup(line);
+        free(function_line);
+        function_line = ft_strdup(line);
         // Append the line to the newly created commented file
         //append_line();
 
@@ -91,6 +92,6 @@ int     comment_file(int fd, int fd_commented)
         line = NULL;
         i++;
     }
-    free(function_name);
+    free(function_line);
     return (0);
 }

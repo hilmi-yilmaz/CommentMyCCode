@@ -7,6 +7,7 @@ SRC = main.c \
 	  comment.c \
 	  parse_arguments.c \
 	  parse_function_name.c \
+	  parse_return.c \
 	  utils.c \
 	  terminate.c
 
