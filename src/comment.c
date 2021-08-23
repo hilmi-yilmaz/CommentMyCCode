@@ -75,7 +75,7 @@ int     comment_file(int fd, int fd_commented)
                 parse_function_name(&func_data->name, function_line);
                 printf("function_name = |%s|\n", func_data->name);
                 print_llist(func_data->args_list);
-                parse_return(func_data->return_data, function_line);
+                parse_return(&func_data->return_data, function_line);
                 printf("return_data type = |%s|\n", func_data->return_data->type);
                 //place_comment();
                 free(function_line);

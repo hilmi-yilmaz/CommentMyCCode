@@ -2,6 +2,50 @@
 #include <stdlib.h>
 #include "../incl/commentmyccode.h"
 
+char    *join_splits(char **splits, char c)
+{
+    int     i;
+    int     amount_splits;
+    char    *joined;
+    char    *tmp_space;
+    char    *tmp;
+    char    c_str[2];
+
+
+    i = 1;
+    amount_splits = len_string_array(splits);
+    c_str[0] = c;
+    c_str[1] = '\0';
+    tmp = ft_strdup(splits[0]);
+    while (i < amount_splits)
+    {
+        tmp_space = ft_strjoin(tmp, c_str);
+        free(tmp);
+        joined = ft_strjoin(tmp_space, splits[i]);
+        free(tmp_space);
+        tmp = ft_strdup(joined);
+        if (i != amount_splits - 1)
+            free(joined);
+        i++;
+    }
+    if (amount_splits == 1)
+        joined = ft_strdup(splits[0]);
+    free(tmp);
+    return (joined);
+}
+
+void    print_string_array(char **str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] != NULL)
+    {
+        printf("|%s|\n", str[i]);
+        i++;
+    }
+}
+
 int     len_string_array(char **str)
 {
     int i;
