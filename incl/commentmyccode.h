@@ -37,6 +37,9 @@ int     create_commented_file(char *src_file);
 
 int     check_functions(char *line);
 int     comment_file(int fd, int fd_commented);
+
+void    parse_function_name(char **name, char *line);
+
 void    parse_arguments(t_list **args_list, char *line);
 void    get_argument(t_list *args, char *line, int len, int count);
 void    get_name(t_arguments *args, char **splits, int total_splits);

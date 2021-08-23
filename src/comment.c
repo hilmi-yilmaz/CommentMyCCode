@@ -73,10 +73,12 @@ int     comment_file(int fd, int fd_commented)
                 printf("\n%s\n", function_name);
                 parse_arguments(&func_data->args_list, function_name);
                 print_llist(func_data->args_list);
-                free(function_name);
-                function_name = NULL;
+                parse_function_name(&func_data->name, function_name);
+                printf("function_name = |%s|\n", func_data->name);
                 //parse_return_value();
                 //place_comment();
+                free(function_name);
+                function_name = NULL;
                 free_func_data(func_data);
             }
         }
