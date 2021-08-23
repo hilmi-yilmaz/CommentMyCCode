@@ -44,6 +44,27 @@ void    get_deref_operators(t_arguments *args, char **splits, int total_splits)
         args->deref_operators++;
 }
 
+void    append_deref_operators_to_type(char **type, int deref_operators)
+{
+    int     i;
+    char    *tmp;
+    char    *tmp_type;
+
+    i = 1;
+    tmp = malloc(sizeof(*tmp) * (deref_operators + 2));
+    tmp[0] = ' ';
+    tmp_type = *type;
+    while (i < deref_operators + 1)
+    {
+        tmp[i] = '*';
+        i++;
+    }
+    tmp[i] = '\0';
+    *type = ft_strjoin(tmp_type, tmp);
+    free(tmp_type);
+    free(tmp);
+}
+
 
 void    get_argument(t_list *args_list, char *line, int len, int count)
 {
@@ -68,6 +89,8 @@ void    get_argument(t_list *args_list, char *line, int len, int count)
     get_deref_operators(args, splits, total_splits);
     get_name(args, splits, total_splits);
     get_type(args, splits, total_splits);
+    if (args->deref_operators > 0)
+        append_deref_operators_to_type(&args->type, args->deref_operators);
 
     // Put the struct inside the linked list
     if (count == 0)

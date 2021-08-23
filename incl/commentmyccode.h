@@ -42,6 +42,7 @@ void    get_argument(t_list *args, char *line, int len, int count);
 void    get_name(t_arguments *args, char **splits, int total_splits);
 void    get_type(t_arguments *args, char **splits, int total_splits);
 void    get_deref_operators(t_arguments *args, char **splits, int total_splits);
+void    append_deref_operators_to_type(char **type, int deref_operators);
 
 /* Terminate */
 int     terminate(int fd, int fd_commented);
