@@ -2,6 +2,16 @@
 #include <stdlib.h>
 #include "../incl/commentmyccode.h"
 
+int     len_string_array(char **str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] != NULL)
+        i++;
+    return (i);
+}
+
 void    init_args_struct(t_arguments *args)
 {
     args->type = NULL;

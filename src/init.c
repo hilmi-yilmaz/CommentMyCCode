@@ -70,26 +70,20 @@ int create_hidden_dir(void)
 
 int create_commented_file(char *src_file)
 {
+    char    **split_src_file;
     char    *commented_file;
     int     fd_commented;
 
-    commented_file = ft_strjoin(".commentmyccode/commented_", src_file); 
+    split_src_file = ft_split(src_file, '/');
+    commented_file = ft_strjoin(".commentmyccode/commented_", split_src_file[len_string_array(split_src_file) - 1]); 
     fd_commented = open(commented_file, O_RDWR | O_TRUNC | O_CREAT | O_APPEND, 0644);
-    if(fd_commented == -1)
+    printf("fd_commented = %d\n", fd_commented);
+    if (fd_commented == -1)
     {
         printf("Error: %s (%s)\n", strerror(errno), commented_file);
         return (-1);
     }
     free(commented_file);
+    free_string_array(split_src_file);
     return (fd_commented);
 }
-
-
-
-
-
-
-
-
-
-

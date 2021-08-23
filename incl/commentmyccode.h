@@ -48,6 +48,7 @@ void    append_deref_operators_to_type(char **type, int deref_operators);
 int     terminate(int fd, int fd_commented);
 
 /* Utils */
+int         len_string_array(char **str);
 void        init_args_struct(t_arguments *args);
 t_return    *init_return_struct(void);
 t_func_data *init_func_data(void);
