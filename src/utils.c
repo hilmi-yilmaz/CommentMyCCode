@@ -2,6 +2,13 @@
 #include <stdlib.h>
 #include "../incl/commentmyccode.h"
 
+int ft_abs(int a)
+{
+    if (a < 0)
+        return (-a);
+    return (a);
+}
+
 char    *join_splits(char **splits, char c, int len)
 {
     int     i;
@@ -86,7 +93,7 @@ t_func_data *init_func_data(void)
 
 void    print_llist(t_list *list)
 {
-    while (list != NULL)
+    while (list != NULL && list->content != NULL)
     {
         printf("--------------------------------------------------\n");
         printf("name  = |%s|\n", ((t_arguments *)(list->content))->name);
@@ -105,7 +112,10 @@ void    free_arguments(void *args)
 
 void    free_llist(t_list *list)
 {
-    ft_lstclear(&list, free_arguments);
+    if (list->content != NULL) // this is the case when no arguments are supplied like this ()
+        ft_lstclear(&list, free_arguments);
+    else
+        free(list);
 }
 
 void    free_func_data(t_func_data *func_data)

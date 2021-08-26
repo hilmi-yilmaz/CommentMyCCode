@@ -79,20 +79,28 @@ void    parse_arguments(t_list **args_list, char *line)
 {
     int         i;
     int         j;
+    int         left_bracket_idx;
+    int         right_bracket_idx;
     int         count;
 
     i = 0;
     j = 0;
     count = 0;
+    left_bracket_idx = -1;
+    right_bracket_idx = -1;
     *args_list = ft_lstnew(NULL);
     while (*(line + i) != '(')
         i++;
+    left_bracket_idx = i;
     i++;
     while (*(line + i + j) != '\0') // loops until the commas
     {
         if (*(line + i + j) == ',' || *(line + i + j) == ')')
         {
-            get_argument(*args_list, line + i, j, count);
+            if (*(line + i + j) == ')')
+                right_bracket_idx = i + j;
+            if ((right_bracket_idx != -1 || left_bracket_idx != -1) && ft_abs(right_bracket_idx - left_bracket_idx) > 1)
+                get_argument(*args_list, line + i, j, count);
             i += (j + 1);
             j = 0;
             count++;

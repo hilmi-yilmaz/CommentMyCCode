@@ -49,8 +49,28 @@ void    parse_return_type(t_return **return_data, char *line)
     compress_spaces(&(*return_data)->type);
 }
 
+void    parse_return_name(t_return **return_data, char *line)
+{
+    int i;
+    int j;
+
+    i = 0;
+    j = 0;
+    while (line[i] != '\0' && line[i] != '(')
+        i++;
+    while (line[i + j] != '\0' && line[i + j] != ')')
+        j++;
+    (*return_data)->name = ft_substr(line, i, j);
+    printf("(*return_data)->name = |%s|\n", (*return_data)->name);
+}
 
 void    parse_return(t_return **return_data, char *line)
 {
+    int i;
+
+    i = 0;
     parse_return_type(return_data, line);
+
+
+
 }

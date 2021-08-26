@@ -35,13 +35,16 @@ int     create_hidden_dir(void);
 int     create_commented_file(char *src_file);
 
 
-int     check_functions(char *line);
-int     comment_file(int fd, int fd_commented);
+int     check_function_line(char *line);
+int     check_curly_bracket(char *line);
+int     check_return(char *line);
+int     comment_file(int fd_behind, int fd_ahead, int fd_commented);
 
 void    parse_function_name(char **name, char *line);
 
 void    parse_return(t_return **return_data, char *line);
 void    parse_return_type(t_return **return_data, char *line);
+void    parse_return_name(t_return **return_data, char *line);
 void    compress_spaces(char **str);
 
 void    parse_arguments(t_list **args_list, char *line);
@@ -55,6 +58,7 @@ void    append_deref_operators_to_type(char **type, int deref_operators);
 int     terminate(int fd, int fd_commented);
 
 /* Utils */
+int         ft_abs(int a);
 int         len_string_array(char **str);
 char        *join_splits(char **splits, char c, int len);
 void        print_string_array(char **str);
