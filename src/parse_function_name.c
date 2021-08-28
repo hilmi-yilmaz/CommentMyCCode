@@ -17,7 +17,7 @@ int parse_function_name(char **name, char *line)
     space = -1;
     deref_index = -1;
     deref = 0;
-    while (line[i] != '(')
+    while (line[i] != '\0' && line[i] != '(')
     {
         if (isspace(line[i]) != 0)
             space = i;

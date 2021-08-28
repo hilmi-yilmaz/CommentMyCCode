@@ -167,7 +167,7 @@ int     parse_arguments(t_list **args_list, char *line)
         printf("Error: %s\n", strerror(errno));
         return (-1);
     }
-    while (*(line + i) != '(')
+    while (line[i] != '\0' && line[i] != '(')
         i++;
     left_bracket_idx = i;
     i++;

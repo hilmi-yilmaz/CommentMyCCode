@@ -38,17 +38,17 @@ int     compress_spaces(char **return_type)
 
 int     parse_return_type(t_return **return_data, char *line)
 {
-    int i;
+    //int i; // <------------- unused variable
     int j;
     int space;
     int deref;
     int ret;
 
-    i = 0;
+    //i = 0;
     j = 0;
     space = -1;
     deref = -1;
-    while (line[j] != '(')
+    while (line[j] != '\0' && line[j] != '(')
     {
         if (isspace(line[j]) != 0)
             space = j;
