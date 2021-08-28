@@ -81,11 +81,24 @@ int create_commented_file(char *src_file)
     int     fd_commented;
 
     split_src_file = ft_split(src_file, '/');
+    if (split_src_file == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
     commented_file = ft_strjoin(".commentmyccode/commented_", split_src_file[len_string_array(split_src_file) - 1]); 
+    if (commented_file == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        free_string_array(split_src_file);
+        return (-1);
+    }
     fd_commented = open(commented_file, O_RDWR | O_TRUNC | O_CREAT | O_APPEND, 0644);
     if (fd_commented == -1)
     {
         printf("Error: %s (%s)\n", strerror(errno), commented_file);
+        free(commented_file);
+        free_string_array(split_src_file);
         return (-1);
     }
     free(commented_file);
