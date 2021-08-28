@@ -1,15 +1,26 @@
 #include "../incl/commentmyccode.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h>
 
-void    get_name(t_arguments *args, char **splits, int total_splits)
+int     get_name(t_arguments *args, char **splits, int total_splits)
 {
     args->name = ft_strtrim(splits[total_splits - 1], "*"); // trim allocates new memory, so split can be freed
+    if (args->name == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
+    return (0);
 }
 
-void    get_type(t_arguments *args, char **splits, int total_splits)
+int     get_type(t_arguments *args, char **splits, int total_splits)
 {
     args->type = join_splits(splits, ' ', total_splits - 1);
+    if (args->type == NULL)
+        return (-1);
+    return (0);
 }
 
 void    get_deref_operators(t_arguments *args, char **splits, int total_splits)
@@ -18,7 +29,7 @@ void    get_deref_operators(t_arguments *args, char **splits, int total_splits)
         args->deref_operators++;
 }
 
-void    append_deref_operators_to_type(char **type, int deref_operators)
+int     append_deref_operators_to_type(char **type, int deref_operators)
 {
     int     i;
     char    *tmp;
@@ -26,6 +37,11 @@ void    append_deref_operators_to_type(char **type, int deref_operators)
 
     i = 1;
     tmp = malloc(sizeof(*tmp) * (deref_operators + 2));
+    if (tmp == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
     tmp[0] = ' ';
     tmp_type = *type;
     while (i < deref_operators + 1)
@@ -35,53 +51,110 @@ void    append_deref_operators_to_type(char **type, int deref_operators)
     }
     tmp[i] = '\0';
     *type = ft_strjoin(tmp_type, tmp);
+    if (*type == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        free(tmp);
+        free(tmp_type);
+        return (-1);
+    }
     free(tmp_type);
     free(tmp);
+    return (0);
 }
 
 
-void    get_argument(t_list *args_list, char *line, int len, int count)
+int     get_argument(t_list *args_list, char *line, int len, int count)
 {
     char        *arg;
     char        **splits;
     int         total_splits;
+    int         ret;
     t_arguments *args;
+    t_list      *tmp;
 
+    tmp = NULL;
     args = malloc(sizeof(*args));
+    if (args == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
     init_args_struct(args);
-
-    // Create a substring
     arg = ft_substr(line, 0, len);
-
-    // Split the data by spaces
+    if (arg == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        free(args);
+        return (-1);
+    }
     splits = ft_split(arg, ' ');
-
-    // Get the latest split, this is the name of the argument
+    if (splits == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        free(args);
+        free(arg);
+        return (-1);
+    }
     total_splits = 0;
     while (splits[total_splits] != NULL)
         total_splits++;
     get_deref_operators(args, splits, total_splits);
-    get_name(args, splits, total_splits);
-    get_type(args, splits, total_splits);
+    ret = get_name(args, splits, total_splits);
+    if (ret == -1)
+    {
+        free(args);
+        free(arg);
+        free_string_array(splits);
+        return (-1);
+    }
+    ret = get_type(args, splits, total_splits);
+    if (ret == -1)
+    {
+        free(args);
+        free(arg);
+        free_string_array(splits);
+        return (-1);
+    }
     if (args->deref_operators > 0)
-        append_deref_operators_to_type(&args->type, args->deref_operators);
-
-    // Put the struct inside the linked list
+    {
+        ret = append_deref_operators_to_type(&args->type, args->deref_operators);
+        if (ret == -1)
+        {
+            free(args);
+            free(arg);
+            free_string_array(splits);
+            return (-1);
+        }
+    }
     if (count == 0)
         args_list->content = args;
     else
-        ft_lstadd_back(&args_list, ft_lstnew(args));
+    {
+        tmp = ft_lstnew(args);
+        if (tmp == NULL)
+        {
+            printf("Error: %s\n", strerror(errno));
+            free(arg);
+            free(args);
+            free_string_array(splits);
+            return (-1);
+        }
+        ft_lstadd_back(&args_list, tmp);
+    }
     free_string_array(splits);
     free(arg);
+    return (0);
 }
 
-void    parse_arguments(t_list **args_list, char *line)
+int     parse_arguments(t_list **args_list, char *line)
 {
     int         i;
     int         j;
     int         left_bracket_idx;
     int         right_bracket_idx;
     int         count;
+    int         ret;
 
     i = 0;
     j = 0;
@@ -89,6 +162,11 @@ void    parse_arguments(t_list **args_list, char *line)
     left_bracket_idx = -1;
     right_bracket_idx = -1;
     *args_list = ft_lstnew(NULL);
+    if (*args_list == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
     while (*(line + i) != '(')
         i++;
     left_bracket_idx = i;
@@ -100,7 +178,11 @@ void    parse_arguments(t_list **args_list, char *line)
             if (*(line + i + j) == ')')
                 right_bracket_idx = i + j;
             if ((right_bracket_idx != -1 || left_bracket_idx != -1) && ft_abs(right_bracket_idx - left_bracket_idx) > 1)
-                get_argument(*args_list, line + i, j, count);
+            {
+                ret = get_argument(*args_list, line + i, j, count);
+                if (ret == -1)
+                    return (-1);
+            }
             i += (j + 1);
             j = 0;
             count++;
@@ -108,4 +190,5 @@ void    parse_arguments(t_list **args_list, char *line)
         }
         j++;
     }
+    return (0);
 }

@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
+#include <errno.h>
+#include <string.h>
 
 void    compress_spaces(char **return_type)
 {

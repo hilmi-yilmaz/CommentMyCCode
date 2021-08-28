@@ -6,7 +6,6 @@
 #include <ctype.h>
 #include <errno.h> // for errno
 #include <string.h> // for strerror
-//#include <sys/types.h>
 #include <sys/stat.h> // for mkdir
 
 /*
@@ -19,6 +18,7 @@ int main(int argc, char **argv)
     int     fd;
     int     fd_extra;
     int     fd_commented;
+    int     comment_ret;
     int     term;
 
     if (argc != 2)
@@ -46,10 +46,15 @@ int main(int argc, char **argv)
         return (-1);
 
     // STEP 3: Find which lines contain function prototypes and comment them
-    comment_file(fd, fd_extra, fd_commented);
+    comment_ret = comment_file(fd, fd_extra, fd_commented);
+    if (comment_ret == -1)
+    {
+        terminate(fd, fd_extra, fd_commented);
+        return (-1);
+    }
  
     // STEP 4: Terminate the program, close the open file desciptors
-    term = terminate(fd, fd_commented);
+    term = terminate(fd, fd_extra, fd_commented);
     if (term == -1)
         return (-1);
     return (0);

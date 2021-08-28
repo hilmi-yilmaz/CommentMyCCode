@@ -1,7 +1,10 @@
 #include "../incl/commentmyccode.h"
 #include <ctype.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
 
-void    parse_function_name(char **name, char *line)
+int parse_function_name(char **name, char *line)
 {
     int i;
     int j;
@@ -29,4 +32,10 @@ void    parse_function_name(char **name, char *line)
         *name = ft_substr(line, space + 1, i - space - 1);
     else
         *name = ft_substr(line, deref_index + 1, i - deref_index - 1);
+    if (*name == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
+    return (0);
 }

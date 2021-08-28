@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <string.h> //strerror
 #include "../incl/commentmyccode.h"
 
 int ft_abs(int a)
@@ -12,30 +14,59 @@ int ft_abs(int a)
 char    *join_splits(char **splits, char c, int len)
 {
     int     i;
-    //int     amount_splits;
     char    *joined;
     char    *tmp_space;
     char    *tmp;
     char    c_str[2];
 
     i = 1;
-    //amount_splits = len_string_array(splits);
     c_str[0] = c;
     c_str[1] = '\0';
     tmp = ft_strdup(splits[0]);
+    if (tmp == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (NULL);
+    }
     while (i < len)
     {
         tmp_space = ft_strjoin(tmp, c_str);
+        if (tmp_space == NULL)
+        {
+            printf("Error: %s\n", strerror(errno));
+            free(tmp);
+            return (NULL);
+        }
         free(tmp);
         joined = ft_strjoin(tmp_space, splits[i]);
+        if (joined == NULL)
+        {
+            printf("Error: %s\n", strerror(errno));
+            free(tmp_space);
+            return (NULL);
+        }
         free(tmp_space);
         tmp = ft_strdup(joined);
+        if (tmp == NULL)
+        {
+            printf("Error: %s\n", strerror(errno));
+            free(joined);
+            return (NULL);
+        }
         if (i != len - 1)
             free(joined);
         i++;
     }
     if (len == 1 || len == 0) //len = 0 is the case that we have (...) variadic, in that case also put that in the type
+    {    
         joined = ft_strdup(splits[0]);
+        if (joined == NULL)
+        {
+            printf("Error: %s\n", strerror(errno));
+            free(tmp);
+            return (NULL);
+        }
+    }
     free(tmp);
     return (joined);
 }
@@ -74,6 +105,11 @@ t_return    *init_return_struct(void)
     t_return    *return_data;
 
     return_data = malloc(sizeof(*return_data));
+    if (return_data == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (NULL);
+    }
     return_data->name = NULL;
     return_data->type = NULL;
     return_data->deref_operators = 0;
@@ -85,9 +121,16 @@ t_func_data *init_func_data(void)
     t_func_data *func_data;
 
     func_data = malloc(sizeof(*func_data));
+    if (func_data == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (NULL);
+    }
     func_data->name = NULL;
     func_data->args_list = NULL;
     func_data->return_data = init_return_struct();
+    if (func_data->return_data == NULL)
+        return (NULL);
     return (func_data);
 }
 
