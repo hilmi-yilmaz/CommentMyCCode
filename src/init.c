@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <unistd.h>     //access
 #include <fcntl.h>      //open
+#include <sys/types.h>  //opendir
 
 #include "../incl/commentmyccode.h"
 
@@ -65,6 +66,11 @@ int create_hidden_dir(void)
     int mkdir_ret;
 
     mkdir_ret = mkdir(".commentmyccode/", 0755); // no error message, because when return -1, mkdir creates new directory
+    if (mkdir_ret == -1 && errno != EEXIST)
+    {
+        printf("Error: %s (%s)\n", strerror(errno), ".commentmyccode/");
+        return (-1);
+    }
     return (0);
 }
 
