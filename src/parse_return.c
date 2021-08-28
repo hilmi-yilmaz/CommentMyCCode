@@ -5,7 +5,7 @@
 #include <errno.h>
 #include <string.h>
 
-void    compress_spaces(char **return_type)
+int     compress_spaces(char **return_type)
 {
     int     i;
     int     len_str;
@@ -20,17 +20,29 @@ void    compress_spaces(char **return_type)
         i++;
     }
     splits = ft_split(*return_type, ' ');
+    if (splits == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
     free(*return_type);
     *return_type = join_splits(splits, ' ', len_string_array(splits));
+    if (*return_type == NULL)
+    {
+        free_string_array(splits);
+        return (-1);
+    }
     free_string_array(splits);
+    return (0);
 }
 
-void    parse_return_type(t_return **return_data, char *line)
+int     parse_return_type(t_return **return_data, char *line)
 {
     int i;
     int j;
     int space;
     int deref;
+    int ret;
 
     i = 0;
     j = 0;
@@ -48,7 +60,15 @@ void    parse_return_type(t_return **return_data, char *line)
         (*return_data)->type = ft_substr(line, 0, deref + 1);
     else
         (*return_data)->type = ft_substr(line, 0, space);
-    compress_spaces(&(*return_data)->type);
+    if ((*return_data)->type == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
+    ret = compress_spaces(&(*return_data)->type);
+    if (ret == -1)
+        return (-1);
+    return (0);
 }
 
 void    parse_return_name(t_return **return_data, char *line)
@@ -66,13 +86,12 @@ void    parse_return_name(t_return **return_data, char *line)
     printf("(*return_data)->name = |%s|\n", (*return_data)->name);
 }
 
-void    parse_return(t_return **return_data, char *line)
+int     parse_return(t_return **return_data, char *line)
 {
-    int i;
+    int ret;
 
-    i = 0;
-    parse_return_type(return_data, line);
-
-
-
+    ret = parse_return_type(return_data, line);
+    if (ret == -1)
+        return (-1);
+    return (0);
 }

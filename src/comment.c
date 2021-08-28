@@ -132,7 +132,14 @@ int     comment_file(int fd_behind, int fd_ahead, int fd_commented)
             }
             printf("function_name = |%s|\n", func_data->name);
             print_llist(func_data->args_list);
-            parse_return(&func_data->return_data, line_behind);
+            ret = parse_return(&func_data->return_data, line_behind);
+            if (ret == -1)
+            {
+                free(line_ahead);
+                free(line_behind);
+                free_func_data(func_data);
+                return (-1);
+            }
             printf("return_data type = |%s|\n", func_data->return_data->type);
             free_func_data(func_data);
         }
@@ -140,9 +147,24 @@ int     comment_file(int fd_behind, int fd_ahead, int fd_commented)
         if (i > 1)
         {
             write_res = write(fd_commented, line_behind, ft_strlen(line_behind));
+            if (write_res == -1)
+            {
+                printf("Error: %s\n", strerror(errno));
+                free(line_ahead);
+                free(line_behind);
+                free_func_data(func_data);
+                return (-1);
+            }
             write_res = write(fd_commented, "\n", 1);
+            if (write_res == -1)
+            {
+                printf("Error: %s\n", strerror(errno));
+                free(line_ahead);
+                free(line_behind);
+                free_func_data(func_data);
+                return (-1);
+            }
         }
-
         free(line_behind);
         free(line_ahead);
         line_behind = NULL;

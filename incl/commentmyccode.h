@@ -42,10 +42,10 @@ int     comment_file(int fd_behind, int fd_ahead, int fd_commented);
 
 int     parse_function_name(char **name, char *line);
 
-void    parse_return(t_return **return_data, char *line);
-void    parse_return_type(t_return **return_data, char *line);
+int     parse_return(t_return **return_data, char *line);
+int     parse_return_type(t_return **return_data, char *line);
 void    parse_return_name(t_return **return_data, char *line);
-void    compress_spaces(char **str);
+int     compress_spaces(char **str);
 
 int     parse_arguments(t_list **args_list, char *line);
 int     get_argument(t_list *args, char *line, int len, int count);
