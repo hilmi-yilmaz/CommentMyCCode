@@ -51,6 +51,11 @@ int check_config(void)
         return (-1);
     }
     path_to_config = ft_strjoin(home, "/.commentmyccode/config");
+    if (path_to_config == NULL)
+    {
+        printf("Error: %s\n", strerror(errno));
+        return (-1);
+    }
     access_ret = access(path_to_config, F_OK);
     if (access_ret != 0)
     {

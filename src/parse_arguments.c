@@ -54,17 +54,15 @@ int     append_deref_operators_to_type(char **type, int deref_operators)
     if (*type == NULL)
     {
         printf("Error: %s\n", strerror(errno));
-        free(tmp);
-        free(tmp_type);
+        free_data(2, tmp_type, tmp);
         return (-1);
     }
-    free(tmp_type);
-    free(tmp);
+    free_data(2, tmp_type, tmp);
     return (0);
 }
 
 
-int     get_argument(t_list *args_list, char *line, int len, int count)
+int     get_argument_type_and_name(t_list *args_list, char *line, int len, int count)
 {
     char        *arg;
     char        **splits;
@@ -85,15 +83,16 @@ int     get_argument(t_list *args_list, char *line, int len, int count)
     if (arg == NULL)
     {
         printf("Error: %s\n", strerror(errno));
-        free(args);
+        free_data(1, args);
         return (-1);
     }
     splits = ft_split(arg, ' ');
     if (splits == NULL)
     {
         printf("Error: %s\n", strerror(errno));
-        free(args);
-        free(arg);
+        //free(args);
+        //free(arg);
+        free_data(2, args, arg);
         return (-1);
     }
     total_splits = 0;
@@ -103,16 +102,18 @@ int     get_argument(t_list *args_list, char *line, int len, int count)
     ret = get_name(args, splits, total_splits);
     if (ret == -1)
     {
-        free(args);
-        free(arg);
+        //free(args);
+        //free(arg);
+        free_data(2, args, arg);
         free_string_array(splits);
         return (-1);
     }
     ret = get_type(args, splits, total_splits);
     if (ret == -1)
     {
-        free(args);
-        free(arg);
+        //free(args);
+        //free(arg);
+        free_data(2, args, arg);
         free_string_array(splits);
         return (-1);
     }
@@ -121,8 +122,9 @@ int     get_argument(t_list *args_list, char *line, int len, int count)
         ret = append_deref_operators_to_type(&args->type, args->deref_operators);
         if (ret == -1)
         {
-            free(args);
-            free(arg);
+            //free(args);
+            //free(arg);
+            free_data(2, args, arg);
             free_string_array(splits);
             return (-1);
         }
@@ -135,8 +137,9 @@ int     get_argument(t_list *args_list, char *line, int len, int count)
         if (tmp == NULL)
         {
             printf("Error: %s\n", strerror(errno));
-            free(arg);
-            free(args);
+            //free(arg);
+            //free(args);
+            free_data(2, args, arg);
             free_string_array(splits);
             return (-1);
         }
@@ -179,7 +182,7 @@ int     parse_arguments(t_list **args_list, char *line)
                 right_bracket_idx = i + j;
             if ((right_bracket_idx != -1 || left_bracket_idx != -1) && ft_abs(right_bracket_idx - left_bracket_idx) > 1)
             {
-                ret = get_argument(*args_list, line + i, j, count);
+                ret = get_argument_type_and_name(*args_list, line + i, j, count);
                 if (ret == -1)
                     return (-1);
             }

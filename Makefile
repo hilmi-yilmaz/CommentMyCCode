@@ -8,7 +8,9 @@ SRC = main.c \
 	  parse_arguments.c \
 	  parse_function_name.c \
 	  parse_return.c \
+	  checks.c \
 	  utils.c \
+	  free.c \
 	  terminate.c
 
 OBJ_DIR = src/

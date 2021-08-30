@@ -34,10 +34,12 @@ int     check_config(void);
 int     create_hidden_dir(void);
 int     create_commented_file(char *src_file);
 
-
+/* Checks */
 int     check_function_line(char *line);
 int     check_curly_bracket(char *line);
 int     check_return(char *line);
+
+/* Parsing data and commenting file */
 int     comment_file(int fd_behind, int fd_ahead, int fd_commented);
 
 int     parse_function_name(char **name, char *line);
@@ -48,7 +50,7 @@ void    parse_return_name(t_return **return_data, char *line);
 int     compress_spaces(char **str);
 
 int     parse_arguments(t_list **args_list, char *line);
-int     get_argument(t_list *args, char *line, int len, int count);
+int     get_argument_type_and_name(t_list *args, char *line, int len, int count);
 int     get_name(t_arguments *args, char **splits, int total_splits);
 int     get_type(t_arguments *args, char **splits, int total_splits);
 void    get_deref_operators(t_arguments *args, char **splits, int total_splits);
@@ -71,5 +73,8 @@ void        free_llist(t_list *list);
 void        free_string_array(char **str_arr);
 void        free_func_data(t_func_data *func_data);
 void        free_return_data(t_return *return_data);
+
+/* Free data */
+void    free_data(int amount, ...);
 
 #endif
